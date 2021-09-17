@@ -1,6 +1,7 @@
 import os
 import json
 
+import time
 import torch
 import torch.nn.functional as F
 import numpy as np
@@ -166,6 +167,8 @@ def synth_samples(targets, predictions, vocoder, model_config, preprocess_config
     basenames = targets[0]
     for i in range(len(predictions[0])):
         basename = basenames[i]
+
+
         src_len = predictions[8][i].item()
         mel_len = predictions[9][i].item()
         mel_prediction = predictions[1][i, :mel_len].detach().transpose(0, 1)
@@ -197,17 +200,21 @@ def synth_samples(targets, predictions, vocoder, model_config, preprocess_config
         plt.savefig(os.path.join(path, "{}.png".format(basename[0:min(len(basename), 10)])))
         plt.close()
 
+
     from .model import vocoder_infer
 
     mel_predictions = predictions[1].transpose(1, 2)
     lengths = predictions[9] * preprocess_config["preprocessing"]["stft"]["hop_length"]
+    start = time.time()
+    print("开始转换")
     wav_predictions = vocoder_infer(
         mel_predictions, vocoder, model_config, preprocess_config, lengths=lengths
     )
-
+    print(f"结束推理，耗时{time.time() - start}")
     sampling_rate = preprocess_config["preprocessing"]["audio"]["sampling_rate"]
     for wav, basename in zip(wav_predictions, basenames):
         wavfile.write(os.path.join(path, "{}.wav".format(basename[0:min(len(basename), 10)])), sampling_rate, wav)
+    print(f"保存结束，耗时{time.time() - start}")
 
 
 def plot_mel(data, stats, titles):
