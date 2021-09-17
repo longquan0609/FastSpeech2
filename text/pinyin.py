@@ -11,6 +11,6 @@ MFA_SYMBOLS = ['a1', 'a2', 'a3', 'a4', 'a5', 'ai1', 'ai2', 'ai3', 'ai4', 'ai5', 
                'i3', 'i4', 'i5', 'ia1', 'ia2', 'ia3', 'ia4', 'ia5', 'iao1', 'iao2', 'iao3', 'iao4', 'ie1', 'ie2', 'ie3', 'ie4', 'ie5', 'o1', 'o2', 'o3', 'o4', 'o5', 'u1', 'u2', 'u3', 'u4', 'u5', 'c',
                'ch', 'ii1', 'ii2', 'ii3', 'ii4', 'ii5', 'ou1', 'ou2', 'ou3', 'ou4', 'ou5', 'uai1', 'uai2', 'uai3', 'uai4', 'ua1', 'ua2', 'ua3', 'ua4', 'ua5', 'uei1', 'uei2', 'uei3', 'uei4', 'uei5',
                'ue1', 'ue2', 'ue3', 'ue4', 'ue5', 'uo1', 'uo2', 'uo3', 'uo4', 'uo5', 'd', 'iou1', 'iou2', 'iou3', 'iou4', 'r', 'f', 'g', 'h', 'j', 'io1', 'io2', 'io3', 'io4', 'v1', 'v2', 'v3', 'v4',
-               'v5', 'va1', 'va2', 'va3', 'va4', 've1', 've2', 've3', 've4', 'k', 'l', 'm', 'p', 'q', 's', 'sh', 't', 'x', 'z', 'zh']
+               'v5', 'va1', 'va2', 'va3', 'va4', 've1', 've2', 've3', 've4', 'k', 'l', 'm', 'p', 'q', 's', 'sh', 't', 'x', 'z', 'zh', 'sp', 'spn', 'EDN', "void", "sil"]
 
 valid_symbols = MFA_SYMBOLS
