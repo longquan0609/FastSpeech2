@@ -2,6 +2,7 @@ import re
 import argparse
 from string import punctuation
 
+import time
 import torch
 import yaml
 import numpy as np
@@ -92,12 +93,15 @@ def synthesize(model, step, configs, vocoder, batchs, control_values):
         batch = to_device(batch, device)
         with torch.no_grad():
             # Forward
+            start = time.time()
+            print("开始推理")
             output = model(
                 *(batch[2:]),
                 p_control=pitch_control,
                 e_control=energy_control,
                 d_control=duration_control
             )
+            print(f"结束推理，耗时{time.time() - start}")
             synth_samples(
                 batch,
                 output,
