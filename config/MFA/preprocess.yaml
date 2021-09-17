@@ -1,8 +1,8 @@
-dataset: "AISHELL3"
+dataset: "MFA"
 
 path:
   corpus_path: "/home/ming/Data/AISHELL-3"  # 不需要
-  lexicon_path: "lexicon/pinyin-lexicon-r.txt"  # 不需要
+  lexicon_path: "./lexicon/lexicon.txt"  # 在合成阶段使用
   raw_path: "/content/workspace/raw"  # ./speaker/*.wav和./speaker/*.lab
   preprocessed_path: "/content/workspace/preprocessed"  # TextGrid/speaker/*.TextGrid
 
