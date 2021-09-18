@@ -107,10 +107,10 @@ if __name__ == "__main__":
 
     # Read Config
     preprocess_config = yaml.load(
-        open(args.preprocess_config, "r"), Loader=yaml.FullLoader
+        open(args.preprocess_config, "r")
     )
-    model_config = yaml.load(open(args.model_config, "r"), Loader=yaml.FullLoader)
-    train_config = yaml.load(open(args.train_config, "r"), Loader=yaml.FullLoader)
+    model_config = yaml.load(open(args.model_config, "r"))
+    train_config = yaml.load(open(args.train_config, "r"))
     configs = (preprocess_config, model_config, train_config)
 
     # Get model

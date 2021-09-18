@@ -207,10 +207,10 @@ if __name__ == "__main__":
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     preprocess_config = yaml.load(
-        open("./config/LJSpeech/preprocess.yaml", "r"), Loader=yaml.FullLoader
+        open("./config/LJSpeech/preprocess.yaml", "r")
     )
     train_config = yaml.load(
-        open("./config/LJSpeech/train.yaml", "r"), Loader=yaml.FullLoader
+        open("./config/LJSpeech/train.yaml", "r")
     )
 
     train_dataset = Dataset(
