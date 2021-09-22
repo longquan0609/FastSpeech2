@@ -21,38 +21,44 @@ class Dataset(Dataset):
         self.basename, self.speaker, self.text, self.raw_text = self.process_meta(
             filename
         )
+        # 读取说话者信息
         with open(os.path.join(self.preprocessed_path, "speakers.json")) as f:
             self.speaker_map = json.load(f)
         self.sort = sort
         self.drop_last = drop_last
 
     def __len__(self):
+        # train.txt中的音素数量
         return len(self.text)
 
     def __getitem__(self, idx):
-        basename = self.basename[idx]
-        speaker = self.speaker[idx]
-        speaker_id = self.speaker_map[speaker]
-        raw_text = self.raw_text[idx]
-        phone = np.array(text_to_sequence(self.text[idx], self.cleaners))
+        basename = self.basename[idx]  # 文件名
+        speaker = self.speaker[idx]  # 说话者
+        speaker_id = self.speaker_map[speaker]  # 说话者id
+        raw_text = self.raw_text[idx]  # 拼音
+        phone = np.array(text_to_sequence(self.text[idx], self.cleaners))  # 音素对应的id
+        # mel文件路径，说话和文件名定位
         mel_path = os.path.join(
             self.preprocessed_path,
             "mel",
             "{}-mel-{}.npy".format(speaker, basename),
         )
         mel = np.load(mel_path)
+        # pitch文件路径，说话和文件名定位
         pitch_path = os.path.join(
             self.preprocessed_path,
             "pitch",
             "{}-pitch-{}.npy".format(speaker, basename),
         )
         pitch = np.load(pitch_path)
+        # energy文件路径，说话和文件名定位
         energy_path = os.path.join(
             self.preprocessed_path,
             "energy",
             "{}-energy-{}.npy".format(speaker, basename),
         )
         energy = np.load(energy_path)
+        # duration文件路径，说话和文件名定位
         duration_path = os.path.join(
             self.preprocessed_path,
             "duration",
@@ -77,10 +83,10 @@ class Dataset(Dataset):
         with open(
             os.path.join(self.preprocessed_path, filename), "r", encoding="utf-8"
         ) as f:
-            name = []
-            speaker = []
-            text = []
-            raw_text = []
+            name = []  # 文件名列表
+            speaker = []  # 说话者列表
+            text = []  # 音素列表
+            raw_text = []  # 拼音列表
             for line in f.readlines():
                 n, s, t, r = line.strip("\n").split("|")
                 name.append(n)

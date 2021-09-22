@@ -19,7 +19,7 @@ def text_to_sequence(text, cleaner_names):
     in it. For example, "Turn left on {HH AW1 S S T AH0 N} Street."
 
     Args:
-      text: string to convert to a sequence
+      text: string to convert to a sequence，音素
       cleaner_names: names of the cleaner functions to run the text through
 
     Returns:

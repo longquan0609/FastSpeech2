@@ -66,7 +66,7 @@ class Preprocessor:
         speakers = {}
         for i, speaker in enumerate(tqdm(os.listdir(self.in_dir))):
             speakers[speaker] = i
-            for wav_name in os.listdir(os.path.join(self.in_dir, speaker)):
+            for wav_name in tqdm(os.listdir(os.path.join(self.in_dir, speaker))):
                 if ".wav" not in wav_name:
                     continue
 
@@ -81,6 +81,8 @@ class Preprocessor:
                     else:
                         info, pitch, energy, n = ret
                     out.append(info)
+                else:
+                    continue
 
                 if len(pitch) > 0:
                     pitch_scaler.partial_fit(pitch.reshape((-1, 1)))
