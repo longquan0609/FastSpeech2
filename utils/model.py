@@ -106,7 +106,7 @@ def vocoder_infer(mels, vocoder, model_config, preprocess_config, lengths=None):
     print(f"shape:{wavs.shape}\n{wavs}")
 
     wavs = (
-        wavs
+        wavs.cpu().numpy()
         * preprocess_config["preprocessing"]["audio"]["max_wav_value"]
     ).astype("int16")
     wavs = [wav for wav in wavs]
