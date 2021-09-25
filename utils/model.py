@@ -7,6 +7,7 @@ import numpy as np
 import hifigan
 import melgan
 import vocgan
+import waveglow
 from model import FastSpeech2, ScheduledOptim
 
 
@@ -58,7 +59,10 @@ def get_vocoder(config, device):
         # vocoder.mel2wav.to(device)
         vocoder = melgan.MelGAN("melgan/melgan_ljspeech.pth", device = device)
     elif name == "VocGAN":
-        vocoder = melgan.MelGAN("melgan/vctk_pretrained_model_3180.pt", device = device)
+        vocoder = vocgan.VocGan("vocgan/vctk_pretrained_model_3180.pt", device = device)
+    elif name == "Waveglow":
+        vocoder = waveglow.Waveglow("waveglow/waveglow_256channels_universal_v5_state_dict.pt", device = device)
+
     elif name == "HiFi-GAN":
         with open("hifigan/config.json", "r") as f:
             config = json.load(f)
@@ -90,7 +94,7 @@ def normalize(wav):
 def vocoder_infer(mels, vocoder, model_config, preprocess_config, lengths=None):
     name = model_config["vocoder"]["model"]
     with torch.no_grad():
-        if name == "MelGAN" or name == "VocGAN":
+        if name == "MelGAN" or name == "VocGAN" or name == "Waveglow":
             wavs = vocoder(mels)
             wavs = normalize(wavs)
             npwav = np.zeros(5, np.int16)
