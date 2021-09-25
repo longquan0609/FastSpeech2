@@ -5,6 +5,7 @@ import torch
 import numpy as np
 
 import hifigan
+import melgan
 from model import FastSpeech2, ScheduledOptim
 
 
@@ -44,16 +45,17 @@ def get_vocoder(config, device):
     speaker = config["vocoder"]["speaker"]
 
     if name == "MelGAN":
-        if speaker == "LJSpeech":
-            vocoder = torch.hub.load(
-                "descriptinc/melgan-neurips", "load_melgan", "linda_johnson"
-            )
-        elif speaker == "universal":
-            vocoder = torch.hub.load(
-                "descriptinc/melgan-neurips", "load_melgan", "multi_speaker"
-            )
-        vocoder.mel2wav.eval()
-        vocoder.mel2wav.to(device)
+        # if speaker == "LJSpeech":
+        #     vocoder = torch.hub.load(
+        #         "descriptinc/melgan-neurips", "load_melgan", "linda_johnson"
+        #     )
+        # elif speaker == "universal":
+        #     vocoder = torch.hub.load(
+        #         "descriptinc/melgan-neurips", "load_melgan", "multi_speaker"
+        #     )
+        # vocoder.mel2wav.eval()
+        # vocoder.mel2wav.to(device)
+        vocoder = melgan.MelGAN("melgan/melgan_ljspeech.pth", device = device)
     elif name == "HiFi-GAN":
         with open("hifigan/config.json", "r") as f:
             config = json.load(f)
@@ -75,7 +77,7 @@ def vocoder_infer(mels, vocoder, model_config, preprocess_config, lengths=None):
     name = model_config["vocoder"]["model"]
     with torch.no_grad():
         if name == "MelGAN":
-            wavs = vocoder.inverse(mels / np.log(10))
+            wavs = vocoder(mels).squeeze(1)
         elif name == "HiFi-GAN":
             wavs = vocoder(mels).squeeze(1)
 
