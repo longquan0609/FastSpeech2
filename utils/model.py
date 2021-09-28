@@ -97,7 +97,11 @@ def vocoder_infer(mels, vocoder, model_config, preprocess_config, lengths=None):
         if name == "MelGAN" or name == "VocGAN" or name == "Waveglow":
             wavs = vocoder(mels)
             result = []
-            for wav in wavs:
+            print(lengths)
+            for i, wav in enumerate(wavs):
+                wav = np.concatenate((np.zeros(5, np.int16), wav))
+                if lengths is not None:
+                    wav = wav[: lengths[i]]
                 result.append(np.concatenate((np.zeros(5, np.int16), wav)))
             return result
         elif name == "HiFi-GAN":
