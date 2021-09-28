@@ -11,9 +11,10 @@ from g2p_en import G2p
 from pypinyin import pinyin, Style
 
 from utils.model import get_model, get_vocoder
-from utils.tools import to_device, synth_samples
 from dataset import TextDataset
 from text import text_to_sequence
+from utils.tools import to_device, synth_samples
+from utils.gp2py import gp2py
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
@@ -61,12 +62,7 @@ def preprocess_mandarin(text, preprocess_config):
     lexicon = read_lexicon(preprocess_config["path"]["lexicon_path"])
 
     phones = []
-    pinyins = [
-        p[0]
-        for p in pinyin(
-            text, style=Style.TONE3, strict=False, neutral_tone_with_five=True
-        )
-    ]
+    pinyins = gp2py(text)
     for p in pinyins:
         if p in lexicon:
             phones += lexicon[p]

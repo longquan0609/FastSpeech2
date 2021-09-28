@@ -96,10 +96,10 @@ def vocoder_infer(mels, vocoder, model_config, preprocess_config, lengths=None):
     with torch.no_grad():
         if name == "MelGAN" or name == "VocGAN" or name == "Waveglow":
             wavs = vocoder(mels)
-            wavs = normalize(wavs)
-            npwav = np.zeros(5, np.int16)
-            npwav = np.concatenate((npwav, wavs))
-            return [npwav]
+            result = []
+            for wav in wavs:
+                result.append(np.concatenate((np.zeros(5, np.int16), wav)))
+            return result
         elif name == "HiFi-GAN":
             wavs = vocoder(mels).squeeze(1)
 

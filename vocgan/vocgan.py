@@ -31,30 +31,32 @@ class VocGan:
         self.denoise = denoise
         self.device = device
 
-    def synthesize(self, mel):
+    def synthesize(self, mels):
 
         with torch.no_grad():
-            if not isinstance(mel, torch.Tensor):
-                mel = torch.tensor(mel)
+            audios = []
+            for mel in mels:
+                if not isinstance(mel, torch.Tensor):
+                    mel = torch.tensor(mel)
 
-            if len(mel.shape) == 2:
-                mel = mel.unsqueeze(0)
-            mel = mel.to(self.device)
-            audio = self.model.inference(mel)
+                if len(mel.shape) == 2:
+                    mel = mel.unsqueeze(0)
+                mel = mel.to(self.device)
+                audio = self.model.inference(mel)
 
-            audio = audio.squeeze(0)  # collapse all dimension except time axis
-            if self.denoise:
-                denoiser = Denoiser(self.model, device = self.device)
-                # .to(self.device)
-                audio = denoiser(audio, 0.01)
-            audio = audio.squeeze()
-            audio = audio[:-(self.hp.audio.hop_length * 10)]
-            # audio = MAX_WAV_VALUE * audio
-            # audio = audio.clamp(min=-MAX_WAV_VALUE, max=MAX_WAV_VALUE - 1)
-            # audio = audio.short()
-            audio = audio.cpu().detach().numpy()
+                audio = audio.squeeze(0)  # collapse all dimension except time axis
+                if self.denoise:
+                    denoiser = Denoiser(self.model, device = self.device)
+                    # .to(self.device)
+                    audio = denoiser(audio, 0.01)
+                audio = audio.squeeze()
+                audio = audio[:-(self.hp.audio.hop_length * 10)]
+                # audio = MAX_WAV_VALUE * audio
+                # audio = audio.clamp(min=-MAX_WAV_VALUE, max=MAX_WAV_VALUE - 1)
+                # audio = audio.short()
+                audio = audio.cpu().detach().numpy()
+                audios.append(audio)
+        return audios
 
-        return audio
-
-    def __call__(self, mel):
-        return self.synthesize(mel)
+    def __call__(self, mels):
+        return self.synthesize(mels)
