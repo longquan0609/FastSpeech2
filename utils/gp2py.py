@@ -111,7 +111,7 @@ SPECIAL_NOTES = '。？！?!.;；:,，: ""\"\"\'\''
 
 
 def gp2py(text: str):
-    pys = pypinyin.pinyin(text, pypinyin.TONE3)
+    pys = pypinyin.pinyin(text, pypinyin.TONE3, neutral_tone_with_five=True)
     pys = [p[0] for p in pys]
     correct_tone3(text, pys)
     correct_yi_bu(text, pys)
