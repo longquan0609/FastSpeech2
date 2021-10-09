@@ -45,11 +45,12 @@ def cut_3(txt, last: str = None, behind: str = None):
         # 情况二：(1, 1, 1)
         if len(cut_list[0]) == 1 and len(cut_list[1]) == 1 and len(cut_list[2]) == 1:
 
-            # 合并last + txt
-            last_cut_list = list(jieba.lcut(last + txt, cut_all = True))
-            # 分词为：2，1，1   如：稻草｜给｜我
-            if len(last_cut_list) == 3 and len(last_cut_list[0]) == 2 and len(last_cut_list[1]) and len(last_cut_list[2]):
-                return "3", "2", "3"
+            if last is not None:
+                # 合并last + txt
+                last_cut_list = list(jieba.lcut(last + txt, cut_all = True))
+                # 分词为：2，1，1   如：稻草｜给｜我
+                if len(last_cut_list) == 3 and len(last_cut_list[0]) == 2 and len(last_cut_list[1]) and len(last_cut_list[2]):
+                    return "3", "2", "3"
 
             return "2", "2", "3"
 
