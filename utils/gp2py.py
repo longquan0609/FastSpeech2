@@ -4,8 +4,10 @@ import pypinyin
 import jieba
 
 
-def cut_3(txt):
+def cut_3(txt, last: str = None, behind: str = None):
+    print(last, txt, behind)
     cut_list = list(jieba.lcut(txt, cut_all = True))
+    print(cut_list)
     length = len(cut_list)
 
     # 1，三个字是字是连一起的，无法拆分
@@ -37,11 +39,18 @@ def cut_3(txt):
     # 3，三个字可以拆分成：情况一：(2, 3, 2)，情况二：(1，1，1)
     if length == 3:
         # 情况一：(2, 3, 2)
-        if len(cut_list[0]) == 1 and len(cut_list[1]) == 1 and len(cut_list[2]) == 1:
+        if len(cut_list[0]) == 2 and len(cut_list[1]) == 3 and len(cut_list[2]) == 2:
             return "2", "2", "3"
 
         # 情况二：(1, 1, 1)
         if len(cut_list[0]) == 1 and len(cut_list[1]) == 1 and len(cut_list[2]) == 1:
+
+            # 合并last + txt
+            last_cut_list = list(jieba.lcut(last + txt, cut_all = True))
+            # 分词为：2，1，1   如：稻草｜给｜我
+            if len(last_cut_list) == 3 and len(last_cut_list[0]) == 2 and len(last_cut_list[1]) and len(last_cut_list[2]):
+                return "3", "2", "3"
+
             return "2", "2", "3"
 
 
@@ -49,8 +58,16 @@ def correct_tone3(txt: str, pys: list):
     # 找出三个连续的
     for i in range(2, len(pys)):
         if pys[i][-1] == '3' and pys[i - 1][-1] == '3' and pys[i - 2][-1] == '3':
+            if i - 3 >= 0:
+                last = txt[i - 3]
+            else:
+                last = None
+            if i + 1 < len(pys):
+                behind = txt[i + 1]
+            else:
+                behind = None
             # 根据分词判断变调
-            first, sec, _ = cut_3(txt[i - 2: i + 1])
+            first, sec, _ = cut_3(txt[i - 2: i + 1], last, behind)
             pys[i - 2] = pys[i - 2][:-1] + first
             pys[i - 1] = pys[i - 1][:-1] + sec
 
@@ -111,8 +128,9 @@ SPECIAL_NOTES = '。？！?!.;；:,，: ""\"\"\'\''
 
 
 def gp2py(text: str):
-    pys = pypinyin.pinyin(text, pypinyin.TONE3, neutral_tone_with_five=True)
+    pys = pypinyin.pinyin(text, pypinyin.TONE3, neutral_tone_with_five = True)
     pys = [p[0] for p in pys]
     correct_tone3(text, pys)
     correct_yi_bu(text, pys)
+    # _correct_tone5(pys)
     return pys
