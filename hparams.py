@@ -12,10 +12,10 @@ language = "zh"
 
 # Some paths
 raw_path = os.path.join("./raw_data/", dataset)
-preprocessed_path = os.path.join("./preprocessed_data/", dataset)
-checkpoint_path = os.path.join("./ckpt/", dataset)
+preprocessed_path = "/content/workspace/preprocessed"
+checkpoint_path = "/content/drive/MyDrive/Project/FS2/microsoft/ckpt"
 synth_path = os.path.join("./synth/", dataset)
-log_path = os.path.join("./log/", dataset)
+log_path = "/content/drive/MyDrive/Project/FS2/microsoft/log"
 test_path = os.path.join("./results/", dataset)
 
 

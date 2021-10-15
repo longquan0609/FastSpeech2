@@ -15,10 +15,8 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 
 class Dataset(Dataset):
-    def __init__(self, filename="train.txt", sort=True):
-        self.basename, self.speaker, self.text = self.process_meta(
-            os.path.join(hp.preprocessed_path, filename)
-        )
+    def __init__(self, filename = "train.txt", sort = True):
+        self.basename, self.speaker, self.text = self.process_meta(os.path.join(hp.preprocessed_path, filename))
         self.sort = sort
         with open(os.path.join(hp.preprocessed_path, "speakers.json")) as f:
             self.speaker_map = json.load(f)
@@ -30,76 +28,50 @@ class Dataset(Dataset):
         while True:
             try:
                 basename = self.basename[idx]
-                speaker_id = self.speaker_map[self.speaker[idx]]
+                speaker = self.speaker[idx]
+                speaker_id = self.speaker_map[speaker]
                 phone = np.array(text_to_sequence(self.text[idx]))
-                mel_path = os.path.join(
-                    hp.preprocessed_path,
-                    "mel",
-                    "{}-mel-{}.npy".format(hp.dataset, basename),
-                )
+                mel_path = os.path.join(hp.preprocessed_path, "mel", "{}-mel-{}.npy".format(speaker, basename), )
                 mel_target = np.load(mel_path)
-                D_path = os.path.join(
-                    hp.preprocessed_path,
-                    "alignment",
-                    "{}-ali-{}.npy".format(hp.dataset, basename),
-                )
+                D_path = os.path.join(hp.preprocessed_path, "duration", "{}-duration-{}.npy".format(speaker, basename), )
                 D = np.load(D_path)
-                f0_path = os.path.join(
-                    hp.preprocessed_path,
-                    "f0",
-                    "{}-f0-{}.npy".format(hp.dataset, basename),
-                )
+                f0_path = os.path.join(hp.preprocessed_path, "pitch", "{}-pitch-{}.npy".format(speaker, basename), )
                 f0 = np.load(f0_path)
-                energy_path = os.path.join(
-                    hp.preprocessed_path,
-                    "energy",
-                    "{}-energy-{}.npy".format(hp.dataset, basename),
-                )
+                energy_path = os.path.join(hp.preprocessed_path, "energy", "{}-energy-{}.npy".format(speaker, basename), )
                 energy = np.load(energy_path)
 
-                x_vec_path = os.path.join(
-                    hp.preprocessed_path,
-                    "x_vec",
-                    "{}-xvector-{}.npy".format(hp.dataset, basename),
-                )
-                x_vec = np.load(x_vec_path)
-                d_vec_path = os.path.join(
-                    hp.preprocessed_path,
-                    "d_vec",
-                    "{}-dvector-{}.npy".format(hp.dataset, basename),
-                )
-                d_vec = np.load(d_vec_path)
-                adain_emb_path = os.path.join(
-                    hp.preprocessed_path,
-                    "adain_emb",
-                    "{}-adain-{}.npy".format(hp.dataset, basename),
-                )
-                adain_emb = np.load(adain_emb_path)
-                sample = {
-                    "id": basename,
-                    "speaker": speaker_id,
-                    "text": phone,
-                    "mel_target": mel_target,
-                    "D": D,
-                    "f0": f0,
-                    "energy": energy,
-                    "x_vec": x_vec,
-                    "d_vec": d_vec,
-                    "adain": adain_emb,
-                }
+                # x_vec_path = os.path.join(
+                #     hp.preprocessed_path,
+                #     "x_vec",
+                #     "{}-xvector-{}.npy".format(hp.dataset, basename),
+                # )
+                # x_vec = np.load(x_vec_path)
+                # d_vec_path = os.path.join(
+                #     hp.preprocessed_path,
+                #     "d_vec",
+                #     "{}-dvector-{}.npy".format(hp.dataset, basename),
+                # )
+                # d_vec = np.load(d_vec_path)
+                # adain_emb_path = os.path.join(
+                #     hp.preprocessed_path,
+                #     "adain_emb",
+                #     "{}-adain-{}.npy".format(hp.dataset, basename),
+                # )
+                # adain_emb = np.load(adain_emb_path)
+                sample = {"id": basename, "speaker": speaker_id, "text": phone, "mel_target": mel_target, "D": D, "f0": f0, "energy": energy, "x_vec": None, "d_vec": None, "adain": None, }
                 break
-            except:
+            except Exception as e:
+                print("获取数据异常", e)
                 idx = (idx + 1) % self.__len__()
-
         return sample
 
     def process_meta(self, meta_path):
-        with open(meta_path, "r", encoding="utf-8") as f:
+        with open(meta_path, "r", encoding = "utf-8") as f:
             text = []
             speaker = []
             name = []
             for line in f.readlines():
-                n, s, t = line.strip("\n").split("|")
+                n, s, t, _ = line.strip("\n").split("|")
                 # if "TSV_T2" not in s:
                 name.append(n)
                 speaker.append(s)
@@ -136,21 +108,8 @@ class Dataset(Dataset):
         energies = pad_1D(energies)
         log_Ds = np.log(Ds + hp.log_offset)
 
-        out = {
-            "id": ids,
-            "speaker": speakers,
-            "text": texts,
-            "mel_target": mel_targets,
-            "D": Ds,
-            "log_D": log_Ds,
-            "f0": f0s,
-            "energy": energies,
-            "src_len": length_text,
-            "mel_len": length_mel,
-            "x_vec": x_vec,
-            "d_vec": d_vec,
-            "adain": adain,
-        }
+        out = {"id": ids, "speaker": speakers, "text": texts, "mel_target": mel_targets, "D": Ds, "log_D": log_Ds, "f0": f0s, "energy": energies, "src_len": length_text, "mel_len": length_mel,
+            "x_vec": x_vec, "d_vec": d_vec, "adain": adain, }
 
         return out
 
@@ -163,9 +122,7 @@ class Dataset(Dataset):
         cut_list = list()
         for i in range(real_batchsize):
             if self.sort:
-                cut_list.append(
-                    index_arr[i * real_batchsize : (i + 1) * real_batchsize]
-                )
+                cut_list.append(index_arr[i * real_batchsize: (i + 1) * real_batchsize])
             else:
                 cut_list.append(np.arange(i * real_batchsize, (i + 1) * real_batchsize))
 
@@ -179,21 +136,12 @@ class Dataset(Dataset):
 if __name__ == "__main__":
     # Test
     dataset = Dataset("train.txt")
-    training_loader = DataLoader(
-        dataset,
-        batch_size=16,
-        shuffle=False,
-        collate_fn=dataset.collate_fn,
-        drop_last=True,
-        num_workers=0,
-    )
+    training_loader = DataLoader(dataset, batch_size = 16, shuffle = False, collate_fn = dataset.collate_fn, drop_last = True, num_workers = 0, )
 
     cnt = 0
     for i, batchs in enumerate(training_loader):
         for j, data_of_batch in enumerate(batchs):
-            mel_target = (
-                torch.from_numpy(data_of_batch["mel_target"]).float().to(device)
-            )
+            mel_target = (torch.from_numpy(data_of_batch["mel_target"]).float().to(device))
             D = torch.from_numpy(data_of_batch["D"]).int().to(device)
             if mel_target.shape[1] == D.sum().item():
                 cnt += 1

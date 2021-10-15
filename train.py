@@ -75,7 +75,7 @@ def main(args):
 
     # Load vocoder
     vocoder = utils.get_vocoder()
-
+    print("vocoder")
     # Init logger
     log_path = hp.log_path
     if not os.path.exists(log_path):
@@ -95,8 +95,11 @@ def main(args):
     # Training
     model = model.train()
     total_step = hp.epochs * len(loader) * hp.batch_size
+    print("开始训练")
     for epoch in range(hp.epochs):
+        print(f"第{epoch}回合")
         for i, batchs in enumerate(loader):
+            print(f"batchs：{len(batchs)}")
             for j, data_of_batch in enumerate(batchs):
                 start_time = time.perf_counter()
 
@@ -123,9 +126,12 @@ def main(args):
                 mel_len = torch.from_numpy(data_of_batch["mel_len"]).long().to(device)
                 max_src_len = np.max(data_of_batch["src_len"]).astype(np.int32)
                 max_mel_len = np.max(data_of_batch["mel_len"]).astype(np.int32)
-                d_vec = torch.from_numpy(data_of_batch["d_vec"]).float().to(device)
-                x_vec = torch.from_numpy(data_of_batch["x_vec"]).float().to(device)
-                adain = torch.from_numpy(data_of_batch["adain"]).float().to(device)
+                # d_vec = torch.from_numpy(data_of_batch["d_vec"]).float().to(device)
+                # x_vec = torch.from_numpy(data_of_batch["x_vec"]).float().to(device)
+                # adain = torch.from_numpy(data_of_batch["adain"]).float().to(device)
+                d_vec = None
+                x_vec = None
+                adain = None
 
                 # Forward
                 (
