@@ -72,7 +72,7 @@ class Dataset(Dataset):
             speaker = []
             name = []
             for line in f.readlines():
-                n, s, t, _ = line.strip("\n").split("|")
+                n, s, t = line.strip("\n").split("|")
                 # if "TSV_T2" not in s:
                 name.append(n)
                 speaker.append(s)
