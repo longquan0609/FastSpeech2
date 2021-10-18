@@ -26,6 +26,7 @@ class Dataset(Dataset):
 
     def __getitem__(self, idx):
         while True:
+            os.rena
             try:
                 basename = self.basename[idx]
                 speaker = self.speaker[idx]

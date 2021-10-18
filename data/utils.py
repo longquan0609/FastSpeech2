@@ -144,23 +144,23 @@ def process_utterance(in_dir, out_dir, speaker, basename):
     energy = energy[: len(duration)]
 
     # Save alignment
-    ali_filename = "{}-ali-{}.npy".format(hp.dataset, basename)
+    ali_filename = "{}-ali-{}.npy".format(speaker, basename)
     np.save(
         os.path.join(out_dir, "alignment", ali_filename), duration, allow_pickle=False
     )
 
     # Save fundamental prequency
-    f0_filename = "{}-f0-{}.npy".format(hp.dataset, basename)
+    f0_filename = "{}-f0-{}.npy".format(speaker, basename)
     np.save(os.path.join(out_dir, "f0", f0_filename), f0, allow_pickle=False)
 
     # Save energy
-    energy_filename = "{}-energy-{}.npy".format(hp.dataset, basename)
+    energy_filename = "{}-energy-{}.npy".format(speaker, basename)
     np.save(
         os.path.join(out_dir, "energy", energy_filename), energy, allow_pickle=False
     )
 
     # Save spectrogram
-    mel_filename = "{}-mel-{}.npy".format(hp.dataset, basename)
+    mel_filename = "{}-mel-{}.npy".format(speaker, basename)
     np.save(
         os.path.join(out_dir, "mel", mel_filename),
         mel_spectrogram.T,
