@@ -55,7 +55,6 @@ def main(args):
 
     # Load vocoder
     vocoder = utils.get_vocoder()
-    print("vocoder")
     # Init logger
     log_path = hp.log_path
     if not os.path.exists(log_path):
@@ -75,11 +74,8 @@ def main(args):
     # Training
     model = model.train()
     total_step = hp.epochs * len(loader) * hp.batch_size
-    print("开始训练")
     for epoch in range(hp.epochs):
-        print(f"第{epoch}回合")
         for i, batchs in enumerate(loader):
-            print(f"batchs：{len(batchs)}")
             try:
                 for j, data_of_batch in enumerate(batchs):
                     start_time = time.perf_counter()
@@ -108,12 +104,15 @@ def main(args):
 
                     # Forward
                     (mel_output, mel_postnet_output, log_duration_output, _, f0_output, energy_output, src_mask, mel_mask, _,) = model(text, src_len, mel_len, D, f0, energy, mel_target, max_src_len,
-                        max_mel_len, d_vec = d_vec if args.d_vec else None, x_vec = x_vec if args.x_vec else None, adain = adain if args.adain else None,
-                        speaker = speaker if args.speaker_emb else None, use_gst = args.gst, )
+                                                                                                                                       max_mel_len, d_vec = d_vec if args.d_vec else None,
+                                                                                                                                       x_vec = x_vec if args.x_vec else None,
+                                                                                                                                       adain = adain if args.adain else None,
+                                                                                                                                       speaker = speaker if args.speaker_emb else None,
+                                                                                                                                       use_gst = args.gst, )
 
                     # Cal Loss
                     mel_loss, mel_postnet_loss, d_loss, f_loss, e_loss = Loss(log_duration_output, log_D, f0_output, f0, energy_output, energy, mel_output, mel_postnet_output, mel_target, ~src_mask,
-                        ~mel_mask, )
+                                                                              ~mel_mask, )
                     total_loss = mel_loss + mel_postnet_loss + d_loss + f_loss + e_loss
 
                     # Logger
@@ -188,7 +187,7 @@ def main(args):
                         duration = D[0, :src_length].detach().cpu().numpy().astype(np.int)
 
                         plot_mel([(mel_postnet[0].cpu().numpy(), f0_output, energy_output, duration,), (mel_target[0].cpu().numpy(), f0, energy, duration), ],
-                            ["Synthetized Spectrogram", "Ground-Truth Spectrogram"], filename = os.path.join(synth_path, "step_{}_{}.png".format(current_step, basename)), )
+                                 ["Synthetized Spectrogram", "Ground-Truth Spectrogram"], filename = os.path.join(synth_path, "step_{}_{}.png".format(current_step, basename)), )
 
                     if len(Time) == hp.clear_Time:
                         Time = Time[:-1]

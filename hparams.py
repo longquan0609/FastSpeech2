@@ -1,11 +1,5 @@
 import os
 
-
-# Dataset
-dataset = "M2VoC"
-aishell3_path = "./AISHELL-3"
-m2voc_path = "./M2VoC"
-
 text_cleaners = []
 language = "zh"
 
@@ -14,9 +8,9 @@ language = "zh"
 raw_path = "/content/workspace/raw"
 preprocessed_path = "/content/workspace/preprocessed"
 checkpoint_path = "/content/drive/MyDrive/Project/FS2/microsoft/ckpt"
-synth_path = os.path.join("./synth/", dataset)
+synth_path = "./synth/"
 log_path = "/content/drive/MyDrive/Project/FS2/microsoft/log"
-test_path = os.path.join("./results/", dataset)
+test_path = "./results/"
 
 
 # Audio and mel
@@ -83,9 +77,9 @@ log_offset = 1.0
 
 
 # Save, log and synthesis
-save_step = 50000
-synth_step = 1000
-log_step = 1000
+save_step = 20000
+synth_step = 2000
+log_step = 200
 clear_Time = 20
 
 
