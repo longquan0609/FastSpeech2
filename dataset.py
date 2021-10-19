@@ -7,7 +7,6 @@ import numpy as np
 from torch.utils.data import Dataset, DataLoader
 
 import hparams as hp
-import audio as Audio
 from utils import pad_1D, pad_2D
 from text import text_to_sequence
 
@@ -26,7 +25,6 @@ class Dataset(Dataset):
 
     def __getitem__(self, idx):
         while True:
-            os.rena
             try:
                 basename = self.basename[idx]
                 speaker = self.speaker[idx]
@@ -110,7 +108,7 @@ class Dataset(Dataset):
         log_Ds = np.log(Ds + hp.log_offset)
 
         out = {"id": ids, "speaker": speakers, "text": texts, "mel_target": mel_targets, "D": Ds, "log_D": log_Ds, "f0": f0s, "energy": energies, "src_len": length_text, "mel_len": length_mel,
-            "x_vec": x_vec, "d_vec": d_vec, "adain": adain, }
+               "x_vec": x_vec, "d_vec": d_vec, "adain": adain, }
 
         return out
 
