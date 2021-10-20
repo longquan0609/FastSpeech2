@@ -98,3 +98,5 @@ ref_gru_hidden = 128
 gst_size = 128
 n_style_token = 10
 n_style_attn_head = 4
+
+vocoder = "VocGAN"
