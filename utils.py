@@ -33,16 +33,15 @@ def vocoder_infer(mels, vocoder, paths, lengths = None):
         if hp.vocoder == "VocGAN":
             wavs = vocoder(mels)
             result = []
-            print(lengths)
             for i, wav in enumerate(wavs):
                 wav = np.concatenate((np.zeros(5, np.int16), wav))
-                if lengths is not None:
-                    wav = wav[: lengths[i]]
-                result.append(np.concatenate((np.zeros(5, np.int16), wav)))
-            return result
+                # if lengths is not None:
+                #     wav = wav[: lengths[i]]
+                result.append(wav)
+            wavs = result
         else:
             wavs = vocoder.inverse(mels / np.log(10)).cpu().numpy() * hp.max_wav_value
-    wavs = wavs.astype("int16")
+            wavs = wavs.astype("int16")
     for i in range(len(mels)):
         wav = wavs[i]
         path = paths[i]
