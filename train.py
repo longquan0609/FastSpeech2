@@ -190,11 +190,11 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     # Read Config
-    preprocess_config = yaml.load(
+    preprocess_config = yaml.full_load(
         open(args.preprocess_config, "r")
     )
-    model_config = yaml.load(open(args.model_config, "r"))
-    train_config = yaml.load(open(args.train_config, "r"))
+    model_config = yaml.full_load(open(args.model_config, "r"))
+    train_config = yaml.full_load(open(args.train_config, "r"))
     configs = (preprocess_config, model_config, train_config)
 
     main(args, configs)
